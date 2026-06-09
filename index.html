@@ -174,6 +174,33 @@
   .backbar{ position:sticky; bottom:0; background:linear-gradient(180deg,rgba(242,245,250,0),#f2f5fa 35%); padding:10px 0 4px; margin-top:6px; }
   .backbar .bb{ display:block; width:100%; height:46px; line-height:46px; text-align:center; cursor:pointer; background:#16233a; color:#fff; border-radius:12px; font-size:14.5px; font-weight:700; box-shadow:0 6px 16px rgba(22,35,58,.28); }
   .toast{ position:fixed; left:50%; bottom:42px; transform:translateX(-50%) translateY(20px); background:rgba(20,24,32,.92); color:#fff; padding:11px 20px; border-radius:12px; font-size:13.5px; opacity:0; transition:all .26s; z-index:200; pointer-events:none; box-shadow:0 10px 30px rgba(0,0,0,.3); max-width:80vw; text-align:center; } .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+  /* ===== S1 车系对比页（V3 完整版）专用 ===== */
+  .intro-row{ display:flex; gap:9px; padding:9px 0; border-bottom:1px solid #f0f3f8; } .intro-row:last-child{ border-bottom:0; }
+  .intro-badge{ flex:0 0 52px; width:52px; height:52px; border-radius:11px; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:800; text-align:center; line-height:1.2; }
+  .intro-badge.my{ background:#eaf1ff; color:#2056d6; } .intro-badge.zk{ background:#e7f6ec; color:#149a52; }
+  .intro-txt{ font-size:12.5px; color:#39404a; line-height:1.6; } .intro-txt b{ color:#1c1c1e; }
+  .dimtabs{ display:flex; gap:7px; overflow-x:auto; padding:3px 0 8px; }
+  .dimtab{ flex:0 0 auto; font-size:12.5px; padding:6px 13px; border-radius:999px; background:#f1f4f9; color:#6b7280; font-weight:600; white-space:nowrap; }
+  .dimtab.on{ background:#0a84ff; color:#fff; box-shadow:0 4px 10px rgba(10,132,255,.28); }
+  .dim-concl{ background:linear-gradient(135deg,#eef5ff,#f4f0ff); border:1px solid #dfe8fb; border-radius:12px; padding:11px 12px; }
+  .dim-concl .dc-h{ font-size:12.5px; font-weight:700; color:#0a6fe0; display:flex; align-items:center; gap:5px; margin-bottom:5px; } .dim-concl p{ font-size:12.5px; color:#39404a; line-height:1.6; }
+  .ptable{ width:100%; border-collapse:collapse; font-size:12px; }
+  .ptable th{ background:#f5f8fc; color:#8a909a; font-weight:600; padding:8px 6px; text-align:center; font-size:11px; border-bottom:1px solid #edf0f5; } .ptable th:first-child{ text-align:left; }
+  .ptable td{ padding:9px 6px; text-align:center; border-bottom:1px solid #f2f4f8; color:#39404a; } .ptable td:first-child{ text-align:left; color:#6b7280; font-size:11.5px; }
+  .ptable td.win{ color:#0a6fe0; font-weight:700; } .ptable td.winzk{ color:#149a52; font-weight:700; } .ptable .note{ font-size:10.5px; color:#aab0ba; }
+  .table-more{ text-align:center; font-size:12px; color:#0a6fe0; font-weight:600; cursor:pointer; padding:9px; margin-top:4px; }
+  .ratebar .stat{ flex:1; } .rev .rmain{ flex:1; }
+  .focus-q{ display:flex; gap:9px; align-items:flex-start; padding:8px 2px; border-bottom:1px solid #f0f3f8; } .focus-q:last-child{ border-bottom:0; }
+  .focus-q .qx{ flex:0 0 19px; width:19px; height:19px; border-radius:6px; background:#eaf2ff; color:#0a6fe0; font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; margin-top:1px; }
+  .focus-q .qt{ font-size:13px; color:#2a2f37; } .focus-q.aside .qt{ color:#9aa0a8; }
+  .cand-label{ font-size:11.5px; color:#8a909a; font-weight:600; margin:9px 0 5px; }
+  .cand{ display:flex; align-items:center; gap:9px; padding:8px 10px; border-radius:11px; border:1px solid #e8ecf2; margin-bottom:6px; background:#fff; }
+  .cand.hi{ border-color:var(--hi-line); background:var(--hi); }
+  .cand .dot{ width:9px; height:9px; border-radius:50%; background:#c7ccd4; flex:0 0 9px; } .cand.hi .dot{ background:var(--green); }
+  .cand .cnm{ font-size:13px; font-weight:600; color:#2a2f37; } .cand .cmeta{ font-size:11px; color:#8a909a; } .cand .ctag{ margin-left:auto; }
+  .notfound{ background:#fbfcfe; border:1px dashed #dde5ef; border-radius:11px; padding:9px 11px; margin-top:9px; }
+  .notfound .nf-h{ font-size:11.5px; color:#8a909a; font-weight:700; margin-bottom:5px; } .notfound .nf-i{ font-size:12px; color:#6b7280; padding:3px 0; }
+  .rec-meta-line{ font-size:11px; color:#8a909a; }
   @media (max-width:880px){ .phones{ gap:18px; } .link-arrow{ display:none; } .phone{ width:360px; } }
 </style>
 </head>
@@ -590,18 +617,96 @@ function hCTA(c){
   return `<button class="cta ${c.lead?'lead':''}" onclick="cta('${esc(c.main)}')">${esc(c.main)} ›</button>${subs?`<div class="subcta">${subs}</div>`:''}`;
 }
 
+/* ============ S1 专用：V3 完整「车系对比页」数据 + 渲染 ============ */
+const INTRO={
+  my:"在<b>品牌认知、保值率与补能确定性</b>上优势明显：特斯拉超充网络成熟省心，软件与 OTA 体系稳定，长续航后驱版 CLTC 821km 为同级最长。指导价 26.35–31.35 万，适合看重省心补能与品牌可靠性的用户。",
+  zk:"在<b>空间、配置丰富度与家用舒适</b>上更突出：轴距 2925mm、后排独立空调标配、Ultra 空悬+魔毯，标配激光雷达+Thor-U，四驱 Ultra 0-100 仅 2.98s。全系 22.98–26.98 万、入手价更低更堆料，适合追求舒适与配置的家庭用户。",
+};
+const PTABLE=[
+  {k:"厂商指导价(起)",my:"26.35万",zk:"22.98万",w:"zk",note:"极氪7X 入手门槛更低"},
+  {k:"最长续航(CLTC)",my:"821km",zk:"802km",w:"my",note:"Model Y 长续航后驱最长"},
+  {k:"轴距",my:"2890mm",zk:"2925mm",w:"zk",note:"极氪7X 后排更从容"},
+  {k:"常规后备厢",my:"822L",zk:"905L",w:"zk",note:"极氪7X 更大"},
+  {k:"前备厢",my:"116L",zk:"38L",w:"my",note:"Model Y 更大"},
+  {k:"后排独立空调",my:"无",zk:"标配",w:"zk",note:"极氪7X 家用更舒适"},
+  {k:"智驾硬件",my:"纯视觉·无激光雷达",zk:"激光雷达1+Thor-U",w:"zk",note:"极氪7X 硬件更堆料"},
+  {k:"0-100加速",my:"5.6s",zk:"2.98s",w:"zk",note:"极氪7X 四驱Ultra 更快"},
+  {k:"补能网络",my:"特斯拉超充",zk:"900V+第三方/极氪",w:"my",note:"Model Y 补能更省心"},
+  {k:"整车质保",my:"四年/8万公里",zk:"四年/10万公里",w:"zk",note:"极氪7X 略长"},
+];
+const REVIEW_AGG=[{k:"提到空间舒适",v:"62%"},{k:"提到续航焦虑",v:"16%"},{k:"提到补能便利",v:"82%"}];
+const NOTICE={
+  my:"选装白色内饰、增强版辅助驾驶等需额外付费；后排无独立空调、坐垫偏短，家人长途乘坐建议先试。",
+  zk:"MAX 版空悬/魔毯为选配；车宽 1930mm，老旧小区/地库窄位停车需适应；品牌较新，本地售后网点便利性需实查。",
+};
+const VER_BASE=[
+  {dir:"想温和保值",nm:"特斯拉 Model Y 长续航后驱版",pr:"指导价 28.85万",lt:"821km 同级最长、超充省心、保值与品牌确定性强。"},
+  {dir:"想兼顾性价比",nm:"极氪7X 103kWh 后驱MAX版",pr:"指导价 24.98万",lt:"802km、900V 平台、后排独立空调，价格更友好。"},
+  {dir:"想要顶配舒适",nm:"极氪7X 103kWh 四驱Ultra版",pr:"指导价 26.98万",lt:"四驱+空悬+魔毯+真皮，家用舒适与性能一步到位。"},
+];
+const PREF_CHIPS=["更看重空间","智驾不用太强","担心续航","担心售后","预算不能超","想看真实差评","更看重补能省心"];
+const S1LEFT={
+  pref:["更看重空间"],
+  focus:["家里坐着舒不舒服？","续航和补能够不够用？","落地价会不会超预算？"],
+  cand:{ leanLabel:"继续考察（Model Y & 极氪7X）",
+    leanList:[{nm:"特斯拉 Model Y",meta:"长续航后驱版 · 28.85万"},{nm:"极氪7X",meta:"103四驱Ultra版 · 26.98万"}] },
+  notFound:["智驾够不够强？","落地价具体多少？"], rounds:1, cta:"查看我的完整选车报告",
+};
+const CORE_S1={ dims:["价格","空间","智能化","续航"], active:"价格",
+  concl:"价格维度：极氪7X 全系 22.98–26.98 万整体低于 Model Y（26.35–31.35 万），入手价更低、同价更堆料；Model Y 胜在品牌、保值率与超充网络，综合用车成本各有侧重。" };
+
+function renderLeftS1(){
+  const L=S1LEFT, C=CORE_S1;
+  const verHtml=VER_BASE.map(v=>`<div class="vercard"><div class="verdir">${esc(v.dir)}</div>
+    <div class="vernm">${esc(v.nm)}</div><div class="verpr">${esc(v.pr)}</div><div class="verlt">${esc(v.lt)}</div></div>`).join("");
+  const prefHtml=PREF_CHIPS.map(c=>`<span class="pchip ${L.pref.includes(c)?'on':''}" onclick="this.classList.toggle('on')">${esc(c)}</span>`).join("");
+  const rows=PTABLE.map(r=>`<tr><td>${esc(r.k)}</td><td class="${r.w==='my'?'win':''}">${esc(r.my)}</td><td class="${r.w==='zk'?'winzk':''}">${esc(r.zk)}</td><td class="note">${esc(r.note)} ›</td></tr>`).join("");
+  const aggHtml=REVIEW_AGG.map(a=>`<span class="ratepill">${esc(a.k)} <b>${esc(a.v)}</b></span>`).join("");
+  const revHtml=REVIEW.cards.map(r=>`<div class="rev"><div class="ravt">${esc(r.av)}</div><div class="rmain"><div class="rname">${esc(r.name)} <span class="tag">${esc(r.tag)}</span></div><div class="rtxt">${esc(r.txt)}</div></div></div>`).join("");
+  const focusHtml=L.focus.map((f,i)=>{const aside=f.startsWith("（");return `<div class="focus-q ${aside?'aside':''}"><span class="qx">${aside?'·':(i+1)}</span><span class="qt">${esc(f)}</span></div>`;}).join("");
+  let candHtml=`<div class="cand-label">${esc(L.cand.leanLabel)}</div>`+
+    L.cand.leanList.map(c=>`<div class="cand hi"><span class="dot"></span><div><div class="cnm">${esc(c.nm)}</div><div class="cmeta">${esc(c.meta)}</div></div><span class="ctag tag green">目前倾向</span></div>`).join("");
+  candHtml+=`<div class="cand-label">暂时排除</div><div style="font-size:11.5px;color:#aab0ba;padding:4px 2px;">（暂无）你没有明确放弃任何一台，Model Y 仍保留为候选。</div>`;
+  const nfHtml=L.notFound.map(n=>`<div class="nf-i">· ${esc(n)}</div>`).join("");
+  const dimHtml=C.dims.map(d=>`<span class="dimtab ${d===C.active?'on':''}">${esc(d)}</span>`).join("");
+
+  $("leftPad").innerHTML=`
+    ${hBattleHeader()}${hQuery()}
+    <div class="card"><div class="card-t"><span class="ic">📝</span>双车简介</div>
+      <div style="margin-top:6px;">
+        <div class="intro-row"><div class="intro-badge my">Model<br>Y</div><div class="intro-txt"><b>特斯拉 Model Y｜</b>${INTRO.my}</div></div>
+        <div class="intro-row"><div class="intro-badge zk">极氪<br>7X</div><div class="intro-txt"><b>极氪7X｜</b>${INTRO.zk}</div></div>
+      </div></div>
+    <div class="card"><div class="card-t"><span class="ic">⚖️</span>核心功能对比</div>
+      <div class="dimtabs">${dimHtml}</div>
+      <div class="dim-concl"><div class="dc-h">✦ ${esc(C.active)}维度 · 高亮结论</div><p>${esc(C.concl)}</p></div></div>
+    <div class="card"><div class="card-t"><span class="ic">📊</span>车型对比结果<span class="more" onclick="cta('展开全部参数（演示）')">查看全部参数 ›</span></div>
+      <table class="ptable" style="margin-top:8px;"><thead><tr><th>参数</th><th>Model Y</th><th>极氪7X</th><th>差异提示</th></tr></thead><tbody>${rows}</tbody></table>
+      <div style="font-size:10.5px;color:#aab0ba;margin-top:7px;">参数来源：汽车之家车型库</div></div>
+    <div class="card"><div class="card-t"><span class="ic">💬</span>真实车主评价</div>
+      <div class="ratebar" style="margin-top:9px;"><div class="big">${REVIEW.total}<small> 条</small></div><div class="stat">${aggHtml}</div></div>
+      <div class="divider"></div>${revHtml}
+      <div class="table-more" onclick="cta('查看全部 ${REVIEW.total} 条评价（演示）')">查看全部评价 ›</div></div>
+    <div class="card"><div class="card-t"><span class="ic">⚠️</span>注意事项</div>
+      <div style="margin-top:5px;">
+        <div class="warn-row"><span class="wb my">Model Y</span><span class="wt">${esc(NOTICE.my)}</span></div>
+        <div class="warn-row"><span class="wb zk">极氪7X</span><span class="wt">${esc(NOTICE.zk)}</span></div></div></div>
+    <div class="card"><div class="card-t"><span class="ic">🏆</span>更推荐买哪个版本</div><div style="margin-top:8px;">${verHtml}</div></div>
+    <div class="card"><div class="card-t"><span class="ic">🎚️</span>选择偏好，为你推荐更</div><div class="pref-chips">${prefHtml}</div></div>
+    <div class="card"><div class="card-t"><span class="ic">📋</span>我的对比记录 <span class="tag blue" style="margin-left:6px;">第 ${L.rounds} 轮 · 摘要模式</span></div>
+      <div class="rec-meta-line" style="margin:7px 0 2px;">本记录基于你与 Model Y、极氪7X 的 ${L.rounds} 轮对比对话整理，关注点与候选随轮累积更新。</div>
+      <div class="divider"></div>
+      <div style="font-size:11.5px;color:#8a909a;font-weight:700;margin-bottom:3px;">我的关注点</div>${focusHtml}
+      <div class="divider"></div>${candHtml}
+      <div class="notfound"><div class="nf-h">未找到 / 你还没问的问题</div>${nfHtml}</div></div>
+    <button class="cta" onclick="cta('${esc(L.cta)}')">${esc(L.cta)} ›</button>`;
+}
+
 /* ---- 左页：按 stage 编排组件 ---- */
 function renderLeft(){
+  if(stage==="S1"){ renderLeftS1(); return; }   /* S1 用 V3 完整车系对比页 */
   const B=BATTLE[stage]; let h="";
-  if(stage==="S1"){
-    h+=hBattleHeader()+hQuery()
-      +hJudge("阶段判断 · 本轮怎么看",B.judgement)
-      +hCoreDiff("核心差异对比（5 维 · 双边 + 影响）",B.coreDiff)
-      +hReview()+hRiskList(B.risks)
-      +hVersions("更推荐买哪个版本（初步）",B.versions)
-      +hChips("选择偏好，为你推荐更",B.chips,B.chipsSel)
-      +hCTA(B.cta);
-  } else if(stage==="S2"){
+  if(stage==="S2"){
     h+=hBattleHeader()+hQuery()+hStageChange(B.stageChange)
       +hJudge("阶段判断 · 偏好纠偏后",B.judgement)
       +hCoreDiff("被提升的维度（舒适前置 · 3 维）",B.coreDiff)
