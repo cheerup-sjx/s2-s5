@@ -173,10 +173,11 @@
   .fb-submit{ display:block; width:100%; height:42px; line-height:42px; text-align:center; cursor:pointer; background:#eef3fb; color:#0a6fe0; font-size:13.5px; font-weight:700; border:1px solid #dde7f4; border-radius:11px; margin-top:10px; }
   .backbar{ position:sticky; bottom:0; background:linear-gradient(180deg,rgba(242,245,250,0),#f2f5fa 35%); padding:10px 0 4px; margin-top:6px; }
   .backbar .bb{ display:block; width:100%; height:46px; line-height:46px; text-align:center; cursor:pointer; background:#16233a; color:#fff; border-radius:12px; font-size:14.5px; font-weight:700; box-shadow:0 6px 16px rgba(22,35,58,.28); }
-  /* 左页底部：悬浮主按钮条 + 输入框（始终固定在底部） */
-  .leftcta{ flex:0 0 auto; padding:7px 13px 3px; background:#f2f5fa; }
-  .leftcta:empty{ display:none; } .leftcta .cta{ margin-top:0; }
-  .leftcta .subcta{ display:none; }
+  /* 左页底部：仅输入框固定悬浮；按钮收进内容流里的「下一步动作」卡片 */
+  .actzone{ background:#fff; border:1px solid #e6ebf3; }
+  .actzone-h{ font-size:11.5px; font-weight:700; color:#8a909a; margin-bottom:9px; display:flex; align-items:center; gap:6px; }
+  .actzone-h::before{ content:""; width:6px; height:6px; border-radius:50%; background:#0a84ff; display:inline-block; }
+  .actzone .cta{ margin-top:0; }
   .composer{ flex:0 0 auto; display:flex; align-items:center; gap:9px; padding:9px 13px 12px; background:#fff; border-top:1px solid #edf0f5; }
   .composer .cbox{ flex:1; height:40px; background:#f1f4f9; border-radius:21px; display:flex; align-items:center; padding:0 16px; color:#9aa0a8; font-size:13.5px; }
   .composer .csend{ width:40px; height:40px; flex:0 0 40px; border-radius:50%; background:#16233a; color:#fff; display:flex; align-items:center; justify-content:center; cursor:pointer; }
@@ -241,7 +242,6 @@ html, body { height: auto !important; min-height: 0 !important; overflow: visibl
           <div class="statusbar"><span>9:41</span><span class="right">●●●● 5G 🔋</span></div>
           <div class="navbar"><span class="back">‹</span>对比智能体</div>
           <div class="scroll" id="leftScroll"><div class="pad" id="leftPad"></div></div>
-          <div class="leftcta" id="leftCtaBar"></div>
           <div class="composer">
             <div class="cbox">发消息或者按住说话...</div>
             <div class="csend"><span class="sq"></span></div>
@@ -500,29 +500,29 @@ const EVIDENCE={
 /* 专家观点（mock，按关注点匹配专家定位；与 EVIDENCE 各态数组一一对应） */
 const EXPERTS={
   S1:[
-    {name:"张抗抗",role:"配置参数解读",quote:"单看配置表，极氪7X 后排独立空调、座椅按摩、Ultra 的空悬+魔毯都是标配，轴距 2925mm 也比 Model Y 长一截；Model Y 这些后排舒适项要么没有、要么只给前排。家用看后排，参数上极氪7X 给得更足。"},
-    {name:"四驱小马达",role:"车系优劣分析",quote:"这俩续航各有胜负：Model Y 长续航后驱 821km 是同级标杆、超充体系最省心；极氪7X 高配 802km 也能打，还多了 900V 快充。要补能确定性就 Model Y，要版本续航和充电速度就极氪7X。"},
-    {name:"价格规划师",role:"分析价格",quote:"按 30 万预算算账，极氪7X 全系 22.98–26.98 万落地基本压得住；Model Y 长续航 28.85 万起、四驱要 31.35 万，稍微往上配就破 30 万。纯看落地价的安全边际，极氪7X 更宽裕。"},
-    {name:"白日梦车TECH",role:"配置技术分析",quote:"硬件上极氪7X 给了激光雷达+高算力芯片，是典型堆料路线；Model Y 纯视觉算法成熟、上限稳。但高阶功能都得等系统升级落地，硬件领先不等于现在好用，智驾不刚需就没必要为它加预算。"},
-    {name:"风险分析师",role:"分析风险",quote:"购前风险我标几个：极氪7X 是较新品牌，本地售后网点密度和四驱版偏高的电耗要先确认；Model Y 的短板在后排乘坐和隔音。都不是硬伤，但建议落定前实地核一遍。"},
+    {name:"张抗抗",quote:"从配置表看，极氪7X 后排独立空调、座椅按摩、Ultra 空悬+魔毯均为标配，轴距 2925mm 也更长；Model Y 同类后排舒适项偏少。家用以后排为重，极氪7X 配置更到位。"},
+    {name:"四驱小马达",quote:"续航各有所长：Model Y 长续航后驱 821km 加超充体系，胜在补能确定性；极氪7X 高配 802km 配 900V 快充，胜在版本续航与充电速度。"},
+    {name:"价格规划师",quote:"以 30 万预算衡量，极氪7X 全系 22.98–26.98 万更易控制落地；Model Y 长续航 28.85 万起、四驱 31.35 万，向上加配易超预算。落地价安全边际，极氪7X 更宽裕。"},
+    {name:"白日梦车TECH",quote:"极氪7X 配激光雷达加高算力芯片，走堆料路线；Model Y 纯视觉算法更成熟。高阶功能仍依赖后续升级，硬件领先不等于当下体验更好，辅助驾驶非刚需则不必为此加价。"},
+    {name:"风险分析师",quote:"购前主要风险：极氪7X 品牌较新，需确认本地售后密度与四驱版偏高电耗；Model Y 短板在后排乘坐与隔音。均非硬伤，建议落定前实地核验。"},
   ],
   S2:[
-    {name:"张抗抗",role:"配置参数解读",quote:"把后排配置摆出来看：极氪7X 后排独立空调标配、座椅配置更全、轴距 2925mm；Model Y 后排没有独立空调、坐垫偏短。你重视家人后排，这个参数差距是实打实的。"},
-    {name:"白日梦车TECH",role:"配置技术分析",quote:"悬架是技术分水岭：极氪7X Ultra 给的是空气悬架+魔毯智能悬架，能软硬调、滤振更好；Model Y 是常规悬架、调校偏运动，路感更直接。要家用舒适极氪7X 的方案更对路，就是空悬后期维护成本要算进去。"},
-    {name:"四驱小马达",role:"车系优劣分析",quote:"空间别只看一个数：极氪7X 轴距更长、常规后备厢 905L 更能装；Model Y 赢在 116L 前备厢和最大后备厢略大。乘坐和日常装载极氪7X 占优，满载大件 Model Y 扳回一城。"},
-    {name:"白日梦车TECH",role:"配置技术分析",quote:"你说智驾不用太强，这项就放轻：两套辅助驾驶日常都够用，极氪7X 硬件更冗余、Model Y 算法更稳，差距更多体现在以后的高阶功能上，不必现在为它多掏钱。"},
+    {name:"张抗抗",quote:"后排配置对比明确：极氪7X 后排独立空调标配、座椅配置更全、轴距 2925mm；Model Y 后排无独立空调、坐垫偏短。看重家人后排，参数差距实在。"},
+    {name:"白日梦车TECH",quote:"悬架是关键差异：极氪7X Ultra 标配空气悬架+魔毯智能悬架，可软硬调、滤振更优；Model Y 常规悬架偏运动、路感更直接。家用舒适极氪7X 更对路，需计入空悬后期维护成本。"},
+    {name:"四驱小马达",quote:"空间需综合看：极氪7X 轴距更长、常规后备厢 905L 更能装；Model Y 胜在 116L 前备厢与最大后备厢略大。乘坐与日常装载极氪7X 占优，满载大件 Model Y 更均衡。"},
+    {name:"白日梦车TECH",quote:"辅助驾驶要求不高，此项可弱化：两车日常均够用，极氪7X 硬件更冗余、Model Y 算法更稳，差距主要在后续高阶功能，无需为此加预算。"},
   ],
   S3:[
-    {name:"白日梦车TECH",role:"配置技术分析",quote:"极氪7X 四驱 Ultra 标 715km、电耗约 15.6，跑高速和低温会再打折，这是双电机+大电池的正常代价；900V 平台快充够快，但要看你城市的桩。建议拿真实路线算一遍，别只信官方续航。"},
-    {name:"风险分析师",role:"分析风险",quote:"售后是我会重点标的风险项：极氪门店和授权维修密度通常不如特斯拉，异地或小城市尤其要确认网点距离和备件响应。能就近覆盖就不构成阻断，覆盖差就得把时间成本算进决策。"},
-    {name:"车载娱乐",role:"车机座舱体验",quote:"车机我专门盯：极氪7X 用骁龙 8295，是当前座舱顶级芯片，硬件不虚，偶发卡顿基本是软件层面、靠系统升级修。建议你现场连续切导航/语音/空调/座椅压一压，看实时响应，比看参数靠谱。"},
+    {name:"白日梦车TECH",quote:"极氪7X 四驱 Ultra 标 715km、电耗约 15.6，高速与低温会有折扣，属双电机加大电池的正常表现；900V 快充够快，但取决于本地桩况。建议按真实路线测算，不只看官方续航。"},
+    {name:"风险分析师",quote:"售后为主要风险项：极氪门店与授权维修密度通常不及特斯拉，异地或小城市尤需确认网点距离与备件响应。就近覆盖则不构成阻断，覆盖不足应计入用车成本。"},
+    {name:"车载娱乐",quote:"车机方面，极氪7X 搭载骁龙 8295，为当前座舱顶级芯片，硬件无短板，偶发卡顿多属软件层面、可经升级改善。建议现场连续操作导航/语音/空调/座椅，实测响应更可靠。"},
   ],
   S4:[
-    {name:"价格规划师",role:"分析价格",quote:"按预算规划，30 万内极氪7X 三个版本都能落：26.98 万四驱 Ultra 是舒适顶配，24.98 万后驱 MAX 续航更长更省，22.98 万入门最稳。想一步到位选 Ultra，想把落地价压更松就退一档，钱花在你最在意的点上。"},
-    {name:"四驱小马达",role:"车系优劣分析",quote:"这正是我的本行——四驱还是续航：四驱 Ultra 多花约 2 万换双电机、空悬和更强动力，雨雪满载更稳；后驱 MAX 用更长的 802km 续航和更低价取胜。常跑复杂路况选四驱，纯代步选后驱更划算。"},
+    {name:"价格规划师",quote:"30 万预算内极氪7X 三个版本均可落地：26.98 万四驱 Ultra 为舒适顶配，24.98 万后驱 MAX 续航更长更省，22.98 万为入门之选。追求一步到位选 Ultra，压低落地价则下探一档。"},
+    {name:"四驱小马达",quote:"四驱与续航的取舍：四驱 Ultra 多约 2 万换来双电机、空悬与更强动力，雨雪满载更稳；后驱 MAX 以 802km 续航与更低价取胜。常遇复杂路况选四驱，纯代步选后驱更划算。"},
   ],
   S5:[
-    {name:"四驱小马达",role:"车系优劣分析",quote:"试驾就照差异点逐项验：后排独立空调和座椅让家人实际坐、空悬滤振走段烂路、1930mm 车宽找个窄位泊一次、骁龙 8295 车机连续操作看卡不卡。这几项正是极氪7X 相对 Model Y 的关键区别，现场过一遍心里就有数。"},
+    {name:"四驱小马达",quote:"试驾按差异点逐项验证：后排独立空调与座椅请家人实坐、空悬滤振走烂路、1930mm 车宽试窄位停车、骁龙 8295 车机连续操作。以上为极氪7X 相对 Model Y 的关键区别，现场逐一确认即可。"},
   ],
 };
 const EV_OPEN={S1:3,S2:3,S3:3,S4:2,S5:1};
@@ -667,12 +667,12 @@ function hChecklist(title,icon,items){
   return `<div class="card"><div class="card-t"><span class="ic">${icon}</span>${esc(title)}</div><div class="checklist" style="margin-top:4px;">${body}</div></div>`;
 }
 function hNote(text){ return `<div class="note-card">${text}</div>`; }
-function setLeftCta(c){ const b=$("leftCtaBar"); if(b) b.innerHTML=`<button class="cta ${c.lead?'lead':''}" onclick="cta('${esc(c.main)}')">${esc(c.main)} ›</button>`; }
 function hCTA(c){
-  /* 主按钮移到底部悬浮条（输入框上方），二级按钮仍内联在内容里 */
-  setLeftCta(c);
+  /* 底部所有按钮收进内容流里的「下一步动作」卡片；仅输入框固定悬浮 */
   const subs=(c.subs||[]).map(s=>`<span class="sb" onclick="cta('${esc(s)}')">${esc(s)}</span>`).join("");
-  return subs?`<div class="subcta">${subs}</div>`:'';
+  return `<div class="card actzone"><div class="actzone-h">下一步动作</div>`
+    +`<button class="cta ${c.lead?'lead':''}" onclick="cta('${esc(c.main)}')">${esc(c.main)} ›</button>`
+    +(subs?`<div class="subcta">${subs}</div>`:'')+`</div>`;
 }
 
 /* ============ S1 专用：完整车系对比页数据与渲染 ============ */
@@ -755,8 +755,8 @@ function renderLeftS1(){
       <div class="divider"></div>
       <div style="font-size:11.5px;color:#8a909a;font-weight:700;margin-bottom:3px;">我的关注点</div>${focusHtml}
       <div class="divider"></div>${candHtml}
-      <div class="notfound"><div class="nf-h">还可以继续确认的问题</div>${nfHtml}</div></div>`;
-  setLeftCta({main:L.cta});
+      <div class="notfound"><div class="nf-h">还可以继续确认的问题</div>${nfHtml}</div></div>
+    ${hCTA({main:L.cta})}`;
 }
 
 /* ---- 左页：按 stage 编排组件 ---- */
@@ -816,7 +816,7 @@ function renderRight(){
         <div class="seg"><div class="seg-l"><span class="sq"></span>判断依据</div>
           <div class="ev-cite"><div class="ct-k">车型参数依据 · 汽车之家车型库</div><div class="ct-v">${esc(e.lib)}</div></div>
           <div class="ev-cite owner"><div class="ct-k">车主口碑摘要</div><div class="ct-v">${esc(e.owner)}</div></div>
-          ${(EXPERTS[stage]&&EXPERTS[stage][i])?`<div class="ev-cite expert"><div class="ct-k">专家观点 · ${esc(EXPERTS[stage][i].name)} · ${esc(EXPERTS[stage][i].role)}</div><div class="ct-v">${esc(EXPERTS[stage][i].quote)}</div></div>`:''}</div>
+          ${(EXPERTS[stage]&&EXPERTS[stage][i])?`<div class="ev-cite expert"><div class="ct-k">专家观点 · ${esc(EXPERTS[stage][i].name)}</div><div class="ct-v">${esc(EXPERTS[stage][i].quote)}</div></div>`:''}</div>
         <div class="seg warn"><div class="seg-l"><span class="sq"></span>注意事项</div><p>${esc(e.caution)}</p></div>
         <div class="seg impact"><div class="seg-l"><span class="sq"></span>如何影响选择</div><p>${esc(e.impact)}</p></div>
         <div class="ev-link" onclick="cta('正在查看 Model Y 与极氪7X 的详细对比')">查看详细对比 · Model Y vs 极氪7X ↗</div>
