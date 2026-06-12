@@ -88,6 +88,8 @@
   .riskc{ border:1px solid #f3e1bd; border-radius:11px; padding:10px 11px; margin-bottom:8px; background:#fffdf7; }
   .riskc .rt{ font-size:12.5px; font-weight:700; color:#9a7212; display:flex; align-items:center; gap:7px; flex-wrap:wrap; }
   .riskc .rrow{ font-size:11.5px; color:#5a6470; line-height:1.55; margin-top:5px; } .riskc .rrow b{ color:#39404a; }
+  .riskc .risk-ans{ font-size:12.5px; color:#39404a; line-height:1.65; margin:7px 0 2px; }
+  .act-hint{ font-size:11px; color:#8a909a; margin-top:7px; line-height:1.5; background:#f3f6fb; border-radius:8px; padding:6px 9px; }
   .blockbadge{ display:inline-block; font-size:10.5px; font-weight:700; padding:2px 8px; border-radius:999px; }
   .blockbadge.no{ background:#e4f7ec; color:#1f9d55; } .blockbadge.yes{ background:#fdecea; color:#d2402a; }
   .warn-row{ display:flex; gap:8px; padding:8px 0; align-items:flex-start; border-bottom:1px solid #f4f1ea; } .warn-row:last-child{ border-bottom:0; }
@@ -318,16 +320,22 @@ const BATTLE={
     stageChange:"已从全面对比进入倾向确认：接下来重点看极氪7X 是否有你不能接受的风险。",
     leanConfirm:{ lean:"基于你更重视家用舒适、辅助驾驶不是核心需求，目前更倾向极氪7X。", premise:"你能接受品牌相对新，并在试驾、查价前确认续航、补能、售后和车机稳定性。"},
     risks:[
-      {name:"续航与补能", who:"高频高速 / 长途用户", scene:"冬季或满载跑长途、所在城市充电网点稀疏", block:"影响可控，建议到店确认", blockYes:false,
-       verify:"查真实车主的高速电耗和常跑路线的充电点；也可选 802km 的 103 后驱MAX。", note:"四驱 Ultra 官方续航 715km，相对更费电，实际续航还受驾驶习惯和气温影响。"},
-      {name:"本地售后便利性", who:"看重维修便利的用户", scene:"本地极氪网点少、维修等待长", block:"看本地服务是否方便", blockYes:false,
-       verify:"确认本地服务网点便利性、维修等待与维保体验。", note:"售后方不方便不止看销售门店，还要看授权维修和配件供应速度，需要在本地实地了解。"},
-      {name:"车机 / 长期稳定", who:"重度车机使用者", scene:"连续使用导航/语音/空调/座椅/手机互联", block:"影响可控，建议现场确认", blockYes:false,
-       verify:"现场连续操作，感受响应速度和稳定性。", note:"车机芯片性能高，偶尔卡顿大多是软件问题，后续可通过系统升级优化。"},
+      {name:"续航够不够用", block:"按用车场景选版本即可", blockYes:false,
+       answer:"先给结论：城市通勤为主、偶尔长途，四驱 Ultra 的 715km 完全够用；如果你高速长途较多，更建议选 802km 的 103 后驱MAX（24.98万），续航更长、价格还更低。官方 715km 是理想路况值，高速约打 8 折、城市约 9 折、冬季再略减，四驱相对更费电——按这个折算，日常一周一充、长途中途补一次电是常态。",
+       verify:"试驾时实测一段高速电耗，对照你最常跑的路线估一次实际续航。"},
+      {name:"补能方不方便", block:"城市基本无忧", blockYes:false,
+       answer:"先给结论：极氪7X 是 900V 高压平台，快充功率高、补电快（高速服务区急充一次约十几分钟补到能继续跑）；城市里极氪自建桩+第三方桩日常够用，只是整体密度暂时不如特斯拉超充。如果你家里或公司能装私桩，补能基本不用操心；纯靠公共桩、且常跑偏远路线，才需要提前规划。",
+       verify:"查一下你常去区域和常跑高速沿线的极氪/第三方快充点分布。"},
+      {name:"本地售后好不好找", block:"一二线城市无忧", blockYes:false,
+       answer:"先给结论：极氪是直营+服务中心模式，整车质保四年/10万公里，一二线城市网点已比较完善，常规保养维修能满足；网点密度相比特斯拉仍偏低，所以如果你在下沉城市，建议先确认最近的服务中心距离和事故维修周期，再决定是否构成顾虑。",
+       verify:"查你所在城市的极氪服务中心数量与到店距离，看是否在可接受范围。"},
+      {name:"车机稳不稳", block:"不影响选择", blockYes:false,
+       answer:"先给结论：极氪7X 用骁龙 8295 旗舰座舱芯片，硬件规格是当前第一梯队，日常导航/语音/分屏都流畅；偶发卡顿基本是软件层面，可通过 OTA 升级改善，不构成购买阻碍。",
+       verify:"试驾时连续操作导航/语音/空调/座椅，感受一下实时响应。"},
     ],
-    hostNote:"现在不用再纠结两台车的全面对比，而是集中确认极氪7X 在续航、售后、车机这几方面能不能满足你的基本要求。",
-    nextStep:"如果极氪7X 仍是主要倾向，就进入版本选择，重点确认 30 万内哪一款更适合。",
-    cta:{main:"进入版本确认", subs:["查看风险证据","更新选车报告"]},
+    hostNote:"现在不用再纠结两台车的全面对比，而是集中确认极氪7X 在续航、补能、售后、车机这几方面能不能满足你的基本要求。",
+    nextStep:"这几点都在可接受范围，极氪7X 仍是主要倾向，可以进入版本选择，重点确认 30 万内哪一款更适合。",
+    cta:{main:"进入版本确认", go:"S4", subs:["查看风险证据","更新选车报告"]},
   },
   S4:{
     stageChange:"已从两车对比进入版本选择：当前重点确认极氪7X在 30 万左右预算内哪一款更适合。",
@@ -573,6 +581,7 @@ const $=id=>document.getElementById(id);
 function esc(s){ return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
 function toast(msg){ const t=$("toast"); t.textContent=msg; t.classList.add("show"); clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove("show"),1900); }
 window.cta=msg=>toast(msg);
+window.sendGo=k=>{ toast('已发送：'+USER_Q[k]); setStage(k); };
 
 function renderSwitcher(){
   $("switcher").innerHTML=STAGE_KEYS.map(k=>{const m=STAGE_META[k];
@@ -623,13 +632,11 @@ function hRiskList(arr){
   return `<div class="card"><div class="card-t"><span class="ic">⚠️</span>注意事项 / 风险</div><div style="margin-top:5px;">${body}</div></div>`;
 }
 function hRiskCards(arr){
-  const body=arr.map(r=>`<div class="riskc"><div class="rt">${esc(r.name)} <span class="blockbadge ${r.blockYes?'yes':'no'}">是否影响选择：${esc(r.block)}</span></div>
-    <div class="rrow"><b>影响人群：</b>${esc(r.who)}</div>
-    <div class="rrow"><b>典型场景：</b>${esc(r.scene)}</div>
-    <div class="rrow"><b>如何确认：</b>${esc(r.verify)}</div>
-    <div class="rrow" style="color:#9a7212;">${esc(r.note)}</div></div>`).join("");
-  return `<div class="card"><div class="card-t"><span class="ic">🧪</span>还需要确认的风险点（${arr.length}）</div>
-    <div style="font-size:11.5px;color:#8a909a;margin:4px 0 8px;">逐条看清：会不会影响你的决定，以及到店怎么确认</div>${body}</div>`;
+  const body=arr.map(r=>`<div class="riskc"><div class="rt">${esc(r.name)} <span class="blockbadge ${r.blockYes?'yes':'no'}">${esc(r.block)}</span></div>
+    <div class="risk-ans">${esc(r.answer)}</div>
+    <div class="rrow"><b>想再确认：</b>${esc(r.verify)}</div></div>`).join("");
+  return `<div class="card"><div class="card-t"><span class="ic">🧩</span>你担心的几点，先给结论（${arr.length}）</div>
+    <div style="font-size:11.5px;color:#8a909a;margin:4px 0 8px;">针对你提到的续航、售后等顾虑，直接给判断和建议</div>${body}</div>`;
 }
 function hVersions(title,arr,hiZk2){
   const body=arr.map((v,i)=>{ const hi=v.hi===true;
@@ -657,8 +664,12 @@ function hNote(text){ return `<div class="note-card">${text}</div>`; }
 function hCTA(c){
   /* 底部所有按钮收进内容流里的「下一步动作」卡片；仅输入框固定悬浮 */
   const subs=(c.subs||[]).map(s=>`<span class="sb" onclick="cta('${esc(s)}')">${esc(s)}</span>`).join("");
+  /* c.go：点击即把目标态的 query 当作用户发出去，并推进到该状态 */
+  const mainClick = c.go ? `sendGo('${c.go}')` : `cta('${esc(c.main)}')`;
+  const hint = c.go ? `<div class="act-hint">点击后将作为你的提问发送：「${esc(USER_Q[c.go])}」</div>` : '';
   return `<div class="card actzone"><div class="actzone-h"><span class="ic">⚡</span>下一步动作</div>`
-    +`<button class="cta ${c.lead?'lead':''}" onclick="cta('${esc(c.main)}')">${esc(c.main)} ›</button>`
+    +`<button class="cta ${c.lead?'lead':''}" onclick="${mainClick}">${esc(c.main)}${c.go?' ↗':' ›'}</button>`
+    +hint
     +(subs?`<div class="subcta">${subs}</div>`:'')+`</div>`;
 }
 
